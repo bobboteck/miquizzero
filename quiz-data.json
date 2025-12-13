@@ -1,0 +1,35 @@
+{
+    "questions":
+    [
+        {
+            "id": 10,
+            "question": "Do you like MiQuizZero?",
+            "options": [
+            { "id": "A", "text": "Yes" },
+            { "id": "B", "text": "No" }
+            ],
+            "correct_answer": ["A"]
+        },
+        {
+            "id": 20,
+            "question": "Is MiQuizZero the most beautiful Quiz Application you have see?",
+            "options": [
+            { "id": "A", "text": "Yes" },
+            { "id": "B", "text": "I need to try it again" },
+            { "id": "C", "text": "I like it very much" },
+            { "id": "D", "text": "Maybe yes" },
+            { "id": "E", "text": "I don't like" }
+            ],
+            "correct_answer": ["A","C"]
+        },
+        {
+            "id": 30,
+            "question": "Would you recommend Miquizzero to a friend??",
+            "options": [
+            { "id": "A", "text": "True" },
+            { "id": "B", "text": "False" }
+            ],
+            "correct_answer": ["A"]
+        }
+    ]
+}

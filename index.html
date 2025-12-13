@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <title>MiQuizZero</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#007bff">
+    </head>
+    <body>
+        <div class="titleArea">
+            <h1>MiQuizZero</h1>
+            <div><label>Time available: </label><div id="timer"></div></div>
+        </div>
+
+        <div id="mode-selector">
+            <h3>Upload quiz file</h3>
+            <input type="file" id="quizFileInput" accept=".json" />
+            <div id="fileUploadResult"></div>
+            <h3>Randomly order the questions?</h3>
+            <input type="checkbox" id="quizRandom" />
+            <h3>Total time available (minutes)</h3>
+            <input type="number" id="quizTimeInput" value="5" aria-label="Number of minute available to complete the quiz" />
+            <h3>Select mode</h3>
+            <button id="btnModeFeedback" disabled onclick="startQuiz('feedback')">Direct feedback</button>
+            <button id="btnModeExam" disabled onclick="startQuiz('exam')">Final feedback</button>
+        </div>
+
+        <div class="progress-container" style="display:none;">
+        <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div id="quiz-container"></div>
+
+        <div class="navigateArea">
+            <button id="back-btn" disabled style="display:none;">Previous</button>
+            <button id="next-btn" disabled style="display:none;">Next</button>
+        </div>
+
+        <div id="result"></div>
+
+        <script src="app.js"></script>
+        <!-- PWA Service Worker -->
+        <script>
+        if ("serviceWorker" in navigator)
+        {
+            navigator.serviceWorker.register("service-worker.js")
+            .then(() => console.log("Service Worker registrato"))
+            .catch(err => console.log("Errore Service Worker:", err));
+        }
+        </script>
+        <div class="footer">
+            <a href="https://github.com/bobboteck/miquizzero">MiQiuzZero</a>
+        </div>
+    </body>
+</html>
