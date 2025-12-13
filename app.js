@@ -61,12 +61,10 @@ fileInput.addEventListener("change",() =>
             btnFeedback.disabled = false;
             btnExam.disabled = false;
 
-            //alert("File JSON caricato correttamente!");
             fileUploadResult.innerText = "Quiz file loaded";
         }
         catch (err)
         {
-            //alert("Errore nel file JSON: " + err);
             fileUploadResult.innerText = "Error to load file: " + err;
         }
     };
@@ -261,22 +259,25 @@ function showFeedback()
     const fb = document.getElementById("feedback");
     const user = userAnswers[q.id] || [];
 
-    const correct = arraysEqual(user, q.correct_answer);
-
-    if (correct)
+    // only if you have selected the expected number of responses does it show feedback
+    if(q.correct_answer.length == user.length)
     {
-        score++;
-        fb.innerHTML = `<div class="feedback correct">✓ Correct answer!</div>`;
-    }
-    else
-    {
-        fb.innerHTML = `
-        <div class="feedback wrong">
-            ✗ Wrong answer<br>
-            Correct answer: <b>${q.correct_answer.join(", ")}</b>
-        </div>`;
-    }
+        const correct = arraysEqual(user, q.correct_answer);
 
+        if (correct)
+        {
+            score++;
+            fb.innerHTML = `<div class="feedback correct">✓ Correct answer!</div>`;
+        }
+        else
+        {
+            fb.innerHTML = `
+            <div class="feedback wrong">
+                ✗ Wrong answer<br>
+                Correct answer: <b>${q.correct_answer.join(", ")}</b>
+            </div>`;
+        }
+    }
     //lockOptions();
 }
   
