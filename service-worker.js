@@ -1,4 +1,4 @@
-const CACHE_NAME = "miquizzero-cache-v1";
+const CACHE_NAME = "miquizzero-cache-v2";
 
 const ASSETS = [
   "index.html",
