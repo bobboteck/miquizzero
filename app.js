@@ -282,6 +282,9 @@ function showFeedback()
                 <b>✗</b> Wrong answer<br>
                 Correct answer: <b>${q.correct_answer.join(", ")}</b>
             </div>`;
+
+            navigator.vibrate?.(200);
+            soundError();
         }
     }
 }
@@ -425,4 +428,33 @@ function formatTime(sec)
     const m = Math.floor(sec / 60);
     const s = sec % 60;
     return `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function playTone(frequency, duration, type, volume)
+{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = type;
+    osc.frequency.value = frequency;
+    gain.gain.value = volume;
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + duration / 1000);
+
+    osc.onended = () => ctx.close();
+}
+
+function soundError()
+{
+    playTone(350, 180, "square", 180, 0.5);
+    
+    setTimeout(() =>
+    {
+        playTone(300, 220, "square", 0.6);
+    }, 220);
 }
