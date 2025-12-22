@@ -34,8 +34,8 @@ const quizContainer = document.getElementById("quiz-container");
 const nextBtn = document.getElementById("next-btn");
 const resultBox = document.getElementById("result");
 const timerBox = document.getElementById("timer");
-const progressContainer = document.getElementById("progress-container");
-const progressBar = document.getElementById("progress-bar");
+const progressContainer = document.getElementById("progressContainer");
+const progressBar = document.getElementById("quizProgressBar");
 const backBtn = document.getElementById("back-btn");
 const quizRandom = document.getElementById("quizRandom");
 const fileUploadResult = document.getElementById("fileUploadResult");
@@ -110,7 +110,7 @@ function startQuiz()
     document.getElementById("mode-selector").style.display = "none";
     nextBtn.style.display = "block";
     backBtn.style.display = "inline-block";
-    progressContainer.style.display = "block";
+    progressContainer.style.display = "";
 
     // Check if request to randomize the order of questions
     if(quizRandom.checked)
@@ -311,7 +311,7 @@ backBtn.addEventListener("click", () =>
   
 function updateProgressBar()
 {
-    const percent = (currentIndex / questions.length) * 100;
+    const percent = ((currentIndex + 1) / questions.length) * 100;
     progressBar.style.width = percent + "%";
 }
   

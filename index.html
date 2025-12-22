@@ -12,6 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+    .progress-container
+    {
+        border: 1px solid var(--bs-success-border-subtle);
+        margin-bottom: 10px;
+    }
     .questionBox {
         background: var(--bs-body-bg);
         border-radius: .75rem;
@@ -131,16 +136,8 @@
     </div>
 
     <!-- PROGRESS -->
-    <div id="progress-container" class="progress mb-4" style="height: 12px; display:none;"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-        aria-label="Quiz progress">
-        <div class="progress-bar bg-success"
-             id="progress-bar"
-             style="width:0%">
-        </div>
+    <div id="progressContainer" class="progress border border-success-subtle mb-3" role="progressbar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display: none;">
+        <div id="quizProgressBar" class="progress-bar bg-success" style="width: 0%"></div>
     </div>
 
     <!-- QUIZ -->
