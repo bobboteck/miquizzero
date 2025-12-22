@@ -144,12 +144,7 @@ function startTotalTimer()
     }, 1000);
 }
 
-function formatTime(sec)
-{
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${m}:${s.toString().padStart(2,'0')}`;
-}
+
   
 // ------------ CARICA DOMANDA --------------
 function loadQuestion()
@@ -163,35 +158,35 @@ function loadQuestion()
     const inputType = isMultiple ? "checkbox" : "radio";
     const bookmarkActive = bookmarks.includes(q.id);
 
+    const emptyBookmark = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/></svg>`;
+    const filledBookmark = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16"><path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/></svg>`;
+
     quizContainer.innerHTML = `
-        <div class="questionBox">
-            <div class="questionBookmark">
-                <label>Question ${currentIndex + 1} of ${questions.length}</label>
-                <button id="bookmark-btn" class="buttonBookmark">${bookmarkActive ? "★" : "☆"}</button>
-            </div>
-
-            <p>${q.question}</p>
-
-            <p><i>
-            ${isMultiple ? `(choose the best ${q.correct_answer.length} answers)` : `(choose the best answer)` }
-            </i></p>
-
-            ${q.options.map(opt => `
-            <div class="questionItem">
-                <div>
-                    <input type="${inputType}" name="answer" value="${opt.id}">
-                </div>
-                <div>
-                    <b>${opt.id}.</b> 
-                </div>
-                <div>
-                    ${opt.text}
-                </div>
-            </div>
-            `).join("")}
-
-            <div id="feedback"></div>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h6 class="card-subtitle text-body-secondary">Question ${currentIndex + 1} of ${questions.length}</h6>
+            <button type="button" class="btn"  id="btnBookmark">
+            ${bookmarkActive ? filledBookmark : emptyBookmark}
+            </button>
         </div>
+        <p class="card-text">
+            ${q.question}<br />
+            <i>${isMultiple ? `(choose the best ${q.correct_answer.length} answers)` : `(choose the best answer)` }</i>
+        </p>
+
+        ${q.options.map(opt => `
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="${inputType}" name="answer" value="${opt.id}" id="answer${opt.id}">
+            <label class="form-check-label" for="answer${opt.id}">
+                <b>${opt.id}.</b> ${opt.text}
+            </label>
+        </div>
+        `).join("")}
+
+        <div id="feedback"></div>
+    </div>
+</div>
     `;
 
     // Precarica eventuali risposte già date
@@ -220,7 +215,6 @@ function addAnswerListeners(isMultiple, q)
         {
             if (!isMultiple)
             {
-                //lockOptions();
                 userAnswers[q.id] = [input.value];
                 if (mode === "feedback") showFeedback();
                 nextBtn.disabled = false;
@@ -242,7 +236,7 @@ function addAnswerListeners(isMultiple, q)
   
 function addBookmarkListener(qid)
 {
-    document.getElementById("bookmark-btn").addEventListener("click", () =>
+    document.getElementById("btnBookmark").addEventListener("click", () =>
     {
         if (bookmarks.includes(qid))
         {
@@ -256,12 +250,8 @@ function addBookmarkListener(qid)
         loadQuestion();
     });
 }
-  
-// function lockOptions()
-// {
-//     document.querySelectorAll("input[name='answer']").forEach(inp => inp.disabled = true);
-// }
-  
+
+
 // ------------ FEEDBACK --------------
 function arraysEqual(a, b)
 {
@@ -283,18 +273,17 @@ function showFeedback()
         if (correct)
         {
             score++;
-            fb.innerHTML = `<div class="feedback correct">✓ Correct answer!</div>`;
+            fb.innerHTML = `<div class="alert alert-success" role="alert"><b>✓</b> Correct answer!</div>`;
         }
         else
         {
             fb.innerHTML = `
-            <div class="feedback wrong">
-                ✗ Wrong answer<br>
+            <div class="alert alert-danger" role="alert">
+                <b>✗</b> Wrong answer<br>
                 Correct answer: <b>${q.correct_answer.join(", ")}</b>
             </div>`;
         }
     }
-    //lockOptions();
 }
   
 // ------------ BUTTON NAVIGATION --------------
@@ -429,4 +418,11 @@ function shuffle(arr)
     }
 
     return arr;
+}
+
+function formatTime(sec)
+{
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2,'0')}`;
 }
