@@ -2,6 +2,7 @@ const CACHE_NAME = "miquizzero-cache-v2";
 
 const ASSETS = [
   "index.html",
+  "bootstrap.min.css",
   "style.css",
   "app.js",
   "manifest.json",

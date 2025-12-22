@@ -27,18 +27,21 @@ let userAnswers = {};
 let bookmarks = [];
 
 const fileInput = document.getElementById("quizFileInput");
-const btnFeedback = document.getElementById("btnModeFeedback");
-const btnExam = document.getElementById("btnModeExam");
+// const btnFeedback = document.getElementById("btnModeFeedback");
+// const btnExam = document.getElementById("btnModeExam");
 const txtQuizMinute = document.getElementById("quizTimeInput");
 const quizContainer = document.getElementById("quiz-container");
 const nextBtn = document.getElementById("next-btn");
 const resultBox = document.getElementById("result");
 const timerBox = document.getElementById("timer");
-const progressContainer = document.querySelector(".progress-container");
+const progressContainer = document.getElementById("progress-container");
 const progressBar = document.getElementById("progress-bar");
 const backBtn = document.getElementById("back-btn");
 const quizRandom = document.getElementById("quizRandom");
 const fileUploadResult = document.getElementById("fileUploadResult");
+const selectQuizMode = document.getElementById("selectQuizMode");
+const btnStartQuiz = document.getElementById("btnStartQuiz");
+
 
 /**
  * Load quiz data file
@@ -58,8 +61,11 @@ fileInput.addEventListener("change",() =>
             console.log("JSON load:", quizData);
 
             // Attivo i pulsanti
-            btnFeedback.disabled = false;
-            btnExam.disabled = false;
+            // btnFeedback.disabled = false;
+            // btnExam.disabled = false;
+
+            // Activate mode selector
+            selectQuizMode.disabled = false;
 
             fileUploadResult.innerText = "Quiz file loaded";
         }
@@ -72,13 +78,25 @@ fileInput.addEventListener("change",() =>
     reader.readAsText(file);
 });
 
+selectQuizMode.addEventListener("change", () =>
+{
+    if(selectQuizMode.value !== "")
+    {
+        mode = selectQuizMode.value;
+        btnStartQuiz.disabled = false;
+    }
+    else
+    {
+        mode = "";
+        btnStartQuiz.disabled = true;
+    }
+});
 
 /**
  * Run quiz in mode selected
- * @param {*} selectedMode 
  * @returns 
  */
-function startQuiz(selectedMode)
+function startQuiz()
 {
     if (!quizData)
     {
@@ -88,8 +106,6 @@ function startQuiz(selectedMode)
 
     // Update the total time, on value selected by user
     totalTime = txtQuizMinute.value * 60;
-
-    mode = selectedMode;
 
     document.getElementById("mode-selector").style.display = "none";
     nextBtn.style.display = "block";
@@ -316,6 +332,8 @@ function updateProgressBar()
 function endQuiz()
 {
     clearInterval(totalTimer);
+
+    resultBox.classList.remove("d-none");
 
     quizContainer.innerHTML = "";
     timerBox.innerHTML = "";
