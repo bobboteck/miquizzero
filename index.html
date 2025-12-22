@@ -38,6 +38,17 @@
         outline: 3px solid var(--bs-primary);
         outline-offset: 2px;
     }
+
+
+    .correct {
+    background: #d4edda;
+    color: #155724;
+}
+
+.wrong {
+    background: #f8d7da;
+    color: #721c24;
+}
     </style>
 </head>
 
@@ -74,18 +85,17 @@
                         <label for="quizFileInput" class="form-label">Upload quiz file (.json)</label>
                         <input type="file" id="quizFileInput" class="form-control mb-2" accept=".json" aria-describedby="fileHelp">
                         <div id="fileHelp" class="form-text">Seleziona un file JSON valido</div>
-                        <div id="fileUploadResult" aria-live="polite" class="small mt-2"></div>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="domandeDaUsare" class="form-label">
-                        Questions
+                    <label for="questionToUse" class="form-label">
+                        Questions to use for the quiz
                     </label>
                     <div class="input-group mb-3">
                         <input type="number" disabled
-                            id="domandeDaUsare" value="0" min="1"
-                            class="form-control text-end" aria-label="" aria-describedby="basic-addon2">
-                        <span class="input-group-text" id="basic-addon2">/3</span>
+                            id="questionToUse" value="0" min="1"
+                            class="form-control text-end" aria-label="" aria-describedby="totalQuestions">
+                        <span class="input-group-text" id="totalQuestions">of 0</span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -163,7 +173,7 @@
     </nav>
 
     <!-- RESULT -->
-    <div id="result" class="alert alert-warning fw-bold d-none" role="alert" aria-live="assertive"></div>
+    <div id="result" class="d-none" role="result" aria-live="result"></div>
 
     <!-- FOOTER -->
     <div class="text-center mt-4 small">

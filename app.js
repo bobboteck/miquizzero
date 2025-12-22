@@ -27,8 +27,7 @@ let userAnswers = {};
 let bookmarks = [];
 
 const fileInput = document.getElementById("quizFileInput");
-// const btnFeedback = document.getElementById("btnModeFeedback");
-// const btnExam = document.getElementById("btnModeExam");
+const fileHelp = document.getElementById("fileHelp");
 const txtQuizMinute = document.getElementById("quizTimeInput");
 const quizContainer = document.getElementById("quiz-container");
 const nextBtn = document.getElementById("next-btn");
@@ -38,10 +37,10 @@ const progressContainer = document.getElementById("progressContainer");
 const progressBar = document.getElementById("quizProgressBar");
 const backBtn = document.getElementById("back-btn");
 const quizRandom = document.getElementById("quizRandom");
-const fileUploadResult = document.getElementById("fileUploadResult");
 const selectQuizMode = document.getElementById("selectQuizMode");
 const btnStartQuiz = document.getElementById("btnStartQuiz");
-
+const questionToUse = document.getElementById("questionToUse");
+const totalQuestions = document.getElementById("totalQuestions");
 
 /**
  * Load quiz data file
@@ -58,20 +57,29 @@ fileInput.addEventListener("change",() =>
         try
         {
             quizData = JSON.parse(e.target.result);
-            console.log("JSON load:", quizData);
 
-            // Attivo i pulsanti
-            // btnFeedback.disabled = false;
-            // btnExam.disabled = false;
+            // Validation
+            const error = validateQuizJSON(quizData);
+            if (error)
+            {
+                fileHelp.style.color = "var(--bs-danger)";
+                fileHelp.innerText = `Error in Quiz file loaded: ${error}`;
+            }
+            else
+            {
+                fileHelp.style.color = "var(--bs-success)";
+                fileHelp.innerText = "Quiz file loaded";
+                // Activate mode selector
+                selectQuizMode.disabled = false;
 
-            // Activate mode selector
-            selectQuizMode.disabled = false;
-
-            fileUploadResult.innerText = "Quiz file loaded";
+                questionToUse.value = quizData.questions.length;
+                totalQuestions.innerText = `of ${quizData.questions.length}`;
+            }
         }
         catch (err)
         {
-            fileUploadResult.innerText = "Error to load file: " + err;
+            fileHelp.style.color = "var(--bs-danger)";
+            fileHelp.innerText = `Error in Quiz file loaded: ${err}`;
         }
     };
 
@@ -348,9 +356,14 @@ function endQuiz()
 
     resultBox.innerHTML = `
         <div class="result">
-            Used mode: <strong>${mode === 'exam' ? 'Final feedback' : 'Direct feedback'}</strong><br><br>
-            Score: <strong>${score}</strong> out of <strong>${questions.length}</strong>.
-            <br><br>
+            <div class="row">
+                <div class="col text-start">
+                    Used mode: <strong>${mode === 'exam' ? 'Final feedback' : 'Direct feedback'}</strong>
+                </div>
+                <div class="col text-end">
+                    Score: <strong>${score}</strong> out of <strong>${questions.length}</strong>
+                </div>
+            </div>
             <h3>Domande segnate con ⭐:</h3>
             ${bookmarks.length === 0 ? "Nessuna" : bookmarks.join(", ")}
         </div>
@@ -457,4 +470,52 @@ function soundError()
     {
         playTone(300, 220, "square", 0.6);
     }, 220);
+}
+
+function validateQuizJSON(json)
+{
+    let validationResult = null;
+
+    if (!json || typeof json !== "object")
+    {
+        validationResult = "The JSON file is not valid.";
+    }
+
+    if (!Array.isArray(json.questions))
+    {
+        validationResult = "The file not contains questions.";
+    }
+
+    for (const q of json.questions)
+    {
+        if (typeof q.id === "undefined")
+        {
+            validationResult = "A question is without 'id'.";
+        }
+
+        if (!q.question)
+        {
+            validationResult = `Question ${q.id} is missing 'question'.`;
+        }
+
+        if (!Array.isArray(q.options))
+        {
+            validationResult = `Question ${q.id} has invalid 'options'.`;
+        }
+
+        if (!Array.isArray(q.correct_answer))
+        {
+             validationResult = `Question ${q.id} has an invalid 'correct_answer'.`;
+        }
+
+        for (const opt of q.options)
+        {
+            if (!opt.id || !opt.text)
+            {
+                validationResult = `An option in question ${q.id} is incomplete.`;
+            }
+        }
+    }
+
+    return validationResult;
 }
