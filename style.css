@@ -36,6 +36,12 @@
     color: #155724;
 }
 
+.missed
+{
+    background: #fff3cd;
+    color: #ffc107;
+}
+
 .wrong
 {
     background: #f8d7da;

@@ -1,157 +1,112 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
-<head>
-    <meta charset="UTF-8">
-    <title>MiQuizZero</title>
-
-    <!-- Bootstrap 5.3 -->
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d6efd">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-
-<body class="bg-body-secondary">
-
-<div class="container my-4" style="max-width: 720px;">
-
-    <!-- HEADER -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-2 mb-md-0">MiQuizZero</h1>
-        <div aria-live="polite" aria-atomic="true" class="text-end">
-            <small class="text-muted">Time available</small>
-            <div id="timer" class="fw-bold"></div>
-        </div>
-    </div>
-
-    <!-- MODE SELECTOR -->
-    <div id="mode-selector" class="card mb-4 shadow-sm" role="region" aria-labelledby="modeTitle">
-        <div class="card-body"> <!-- text-center" -->
-
-            <div class="row">
-                <div class="col-8">
-                    <h2 id="modeTitle" class="h5 mb-3">Quiz configuration</h2>
-                </div>
-                <div class="col-4 text-end">
-                    <button class="btn btn-sm btn-outline-secondary" onclick="document.documentElement.dataset.bsTheme = document.documentElement.dataset.bsTheme === 'dark' ? 'light' : 'dark'">🌙 / ☀️</button>
+    <head>
+        <meta charset="UTF-8">
+        <title>MiQuizZero</title>
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#0d6efd">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body class="bg-body-secondary">
+        <div class="container my-4" style="max-width: 720px;">
+            <!-- HEADER -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-2 mb-md-0">MiQuizZero</h1>
+                <div aria-live="polite" aria-atomic="true" class="text-end">
+                    <small class="text-muted">Time available</small>
+                    <div id="timer" class="fw-bold"></div>
                 </div>
             </div>
-
-            <form class="row g-2">
-
-
-                <div class="col-12">
-                        <label for="quizFileInput" class="form-label">Upload quiz file (.json)</label>
-                        <input type="file" id="quizFileInput" class="form-control mb-2" accept=".json" aria-describedby="fileHelp">
-                        <div id="fileHelp" class="form-text">Seleziona un file JSON valido</div>
-                </div>
-
-                <div class="col-md-6">
-                    <label for="questionToUse" class="form-label">
-                        Questions to use for the quiz
-                    </label>
-                    <div class="input-group mb-3">
-                        <input type="number" disabled
-                            id="questionToUse" value="0" min="1"
-                            class="form-control text-end" aria-label="" aria-describedby="totalQuestions">
-                        <span class="input-group-text" id="totalQuestions">of 0</span>
+            <!-- MODE SELECTOR -->
+            <div id="mode-selector" class="card mb-4 shadow-sm" role="region" aria-labelledby="modeTitle">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <h2 id="modeTitle" class="h5 mb-3">Quiz configuration</h2>
+                        </div>
+                        <div class="col-4 text-end">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="document.documentElement.dataset.bsTheme = document.documentElement.dataset.bsTheme === 'dark' ? 'light' : 'dark'">🌙 / ☀️</button>
+                        </div>
                     </div>
+                    <form class="row g-2">
+                        <div class="col-12">
+                            <label for="quizFileInput" class="form-label">Upload quiz file (.json)</label>
+                            <input type="file" id="quizFileInput" class="form-control mb-2" accept=".json" aria-describedby="fileHelp">
+                            <div id="fileHelp" class="form-text">Seleziona un file JSON valido</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="questionToUse" class="form-label">
+                                Questions to use for the quiz
+                            </label>
+                            <div class="input-group mb-3">
+                                <input type="number" disabled id="questionToUse" value="0" min="1" class="form-control text-end" aria-label="" aria-describedby="totalQuestions">
+                                <span class="input-group-text" id="totalQuestions">of 0</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="quizTimeInput" class="form-label">Total time available (minutes)</label>
+                            <input type="number" id="quizTimeInput" class="form-control text-end" value="5" min="1" aria-label="Number of minutes available for quiz">
+                        </div>
+                        <div class="col-12">
+                            <div><label class="form-label">Randomize</label></div>
+                            <div class="form-check form-switch d-flex">
+                                <input class="form-check-input" type="checkbox" id="quizRandom">
+                                <label class="form-check-label ms-2" for="quizRandom">Order of questions</label>
+                            </div>
+                            <div class="form-check form-switch mb-3 d-flex">
+                                <input class="form-check-input" type="checkbox" id="quizRandom" disabled>
+                                <label class="form-check-label ms-2" for="quizRandom">Order of answers</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="selectQuizMode" class="form-label">Quiz mode</label>
+                            <select id="selectQuizMode" class="form-select" aria-label="Default select example" disabled>
+                                <option value="" selected>Select mode ...</option>
+                                <option value="feedback">Direct feedback</option>
+                                <option value="exam">Final feedback</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button id="btnStartQuiz" class="btn btn-primary" disabled aria-disabled="true" onclick="startQuiz(); return false;">
+                                Start quiz
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-6">
-                    <label for="quizTimeInput" class="form-label">
-                        Total time available (minutes)
-                    </label>
-                    <input type="number"
-                            id="quizTimeInput"
-                            class="form-control text-end"
-                            value="5"
-                            min="1"
-                            aria-label="Number of minutes available for quiz">
-                </div>
-
-                <div class="col-12">
-                    <div><label class="form-label">Randomize</label></div>
-                    <div class="form-check form-switch d-flex">
-                        <input class="form-check-input" type="checkbox" id="quizRandom">
-                        <label class="form-check-label ms-2" for="quizRandom">Order of questions</label>
-                    </div>
-                    <div class="form-check form-switch mb-3 d-flex">
-                        <input class="form-check-input" type="checkbox" id="quizRandom" disabled>
-                        <label class="form-check-label ms-2" for="quizRandom">Order of answers</label>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label for="selectQuizMode" class="form-label">Quiz mode</label>
-                    <select id="selectQuizMode" class="form-select" aria-label="Default select example" disabled>
-                        <option value="" selected>Select mode ...</option>
-                        <option value="feedback">Direct feedback</option>
-                        <option value="exam">Final feedback</option>
-                    </select>
-                </div>
-
-                <div class="col-12">
-                    <button id="btnStartQuiz"
-                            class="btn btn-primary"
-                            disabled
-                            aria-disabled="true"
-                            onclick="startQuiz(); return false;">
-                        Start quiz
-                    </button>
-                </div>
-            </form>
-
+            </div>
+            <!-- PROGRESS -->
+            <div id="progressContainer" class="progress border border-success-subtle mb-3" role="progressbar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display: none;">
+                <div id="quizProgressBar" class="progress-bar bg-success" style="width: 0%"></div>
+            </div>
+            <!-- QUIZ -->
+            <div id="quiz-container"></div>
+            <!-- NAVIGATION -->
+            <nav class="d-flex flex-row justify-content-between gap-2 my-3">
+                <button id="back-btn" class="btn btn-secondary" disabled aria-disabled="true" style="display:none;">
+                    Previous
+                </button>
+                <button id="next-btn" class="btn btn-primary" disabled aria-disabled="true" style="display:none;">
+                    Next
+                </button>
+            </nav>
+            <!-- RESULT -->
+            <div id="result" class="d-none" role="result" aria-live="result"></div>
+            <!-- FOOTER -->
+            <div class="text-center mt-4 small">
+                <a href="https://github.com/bobboteck/miquizzero" class="text-decoration-none">MiQuizZero</a> - Version 3.1.0 - by <a href="https://bobboteck.github.io/" class="text-decoration-none">Bobboteck</a>
+            </div>
         </div>
-    </div>
-
-    <!-- PROGRESS -->
-    <div id="progressContainer" class="progress border border-success-subtle mb-3" role="progressbar" aria-label="Success example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display: none;">
-        <div id="quizProgressBar" class="progress-bar bg-success" style="width: 0%"></div>
-    </div>
-
-    <!-- QUIZ -->
-    <div id="quiz-container"></div>
-
-    <!-- NAVIGATION -->
-    <nav class="d-flex flex-row justify-content-between gap-2 my-3">
-        <button id="back-btn"
-                class="btn btn-secondary"
-                disabled
-                aria-disabled="true"
-                style="display:none;">
-            Previous
-        </button>
-
-        <button id="next-btn"
-                class="btn btn-primary"
-                disabled
-                aria-disabled="true"
-                style="display:none;">
-            Next
-        </button>
-    </nav>
-
-    <!-- RESULT -->
-    <div id="result" class="d-none" role="result" aria-live="result"></div>
-
-    <!-- FOOTER -->
-    <div class="text-center mt-4 small">
-        <a href="https://github.com/bobboteck/miquizzero" class="text-decoration-none">MiQuizZero</a> - Version 3.0.0 - by <a href="https://bobboteck.github.io/" class="text-decoration-none">Bobboteck</a>
-    </div>
-</div>
-
-<script src="app.js"></script>
-
-<!-- Service Worker -->
-<script>
-if ("serviceWorker" in navigator) 
-{
-    navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("Service Worker registrato"))
-    .catch(err => console.log("Errore Service Worker:", err));
-}
-</script>
-
-</body>
+        <script src="app.js"></script>
+        <!-- Service Worker -->
+        <script>
+        if ("serviceWorker" in navigator) 
+        {
+            navigator.serviceWorker.register("service-worker.js")
+            .then(() => console.log("Service Worker registrato"))
+            .catch(err => console.log("Errore Service Worker:", err));
+        }
+        </script>
+    </body>
 </html>

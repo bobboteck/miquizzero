@@ -42,6 +42,10 @@ const btnStartQuiz = document.getElementById("btnStartQuiz");
 const questionToUse = document.getElementById("questionToUse");
 const totalQuestions = document.getElementById("totalQuestions");
 
+const emptyBookmark = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/></svg>`;
+const filledBookmark = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16"><path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/></svg>`;
+
+
 /**
  * Load quiz data file
  */
@@ -153,8 +157,7 @@ function startTotalTimer()
 }
 
 
-  
-// ------------ CARICA DOMANDA --------------
+// ------------ Load question --------------
 function loadQuestion()
 {
     nextBtn.disabled = true;
@@ -165,9 +168,6 @@ function loadQuestion()
     const isMultiple = q.correct_answer.length > 1;
     const inputType = isMultiple ? "checkbox" : "radio";
     const bookmarkActive = bookmarks.includes(q.id);
-
-    const emptyBookmark = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/></svg>`;
-    const filledBookmark = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16"><path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/></svg>`;
 
     quizContainer.innerHTML = `
 <div class="card">
@@ -194,8 +194,7 @@ function loadQuestion()
 
         <div id="feedback"></div>
     </div>
-</div>
-    `;
+</div>`;
 
     // Precarica eventuali risposte già date
     if (userAnswers[q.id])
@@ -224,9 +223,13 @@ function addAnswerListeners(isMultiple, q)
             if (!isMultiple)
             {
                 userAnswers[q.id] = [input.value];
-                if (mode === "feedback") showFeedback();
-                nextBtn.disabled = false;
+                
+                if (mode === "feedback")
+                {
+                    showFeedback();
+                }
 
+                nextBtn.disabled = false;
             }
             else
             {
@@ -236,7 +239,10 @@ function addAnswerListeners(isMultiple, q)
 
                 nextBtn.disabled = checked.length === 0;
 
-                if (mode === "feedback") showFeedback();
+                if (mode === "feedback")
+                {
+                    showFeedback();
+                }
             }
         });
     });
@@ -364,60 +370,74 @@ function endQuiz()
                     Score: <strong>${score}</strong> out of <strong>${questions.length}</strong>
                 </div>
             </div>
-            <h3>Domande segnate con ⭐:</h3>
-            ${bookmarks.length === 0 ? "Nessuna" : bookmarks.join(", ")}
         </div>
     `;
 
     if (mode === "exam")
     {
-        let reviewHtml = "<h3>Correzione dettagliata:</h3>";
+        let reviewHtmlNew = "<h3 class='mt-2'>Results Details</h3>";
+        let currentQuestion = 1;
 
         questions.forEach(q =>
         {
             const user = userAnswers[q.id] || [];
+            const isMultiple = q.correct_answer.length > 1;
+            const bookmarkActive = bookmarks.includes(q.id);
 
-            reviewHtml += `
-                <div class="reviewQuestion">
-                    <p><b>${q.question}</b></p>
-                    <ul>
-            `;
+            reviewHtmlNew += `
+<div class="card mb-2">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h6 class="card-subtitle text-body-secondary">Question ${currentQuestion} of ${questions.length}</h6>
+            <button type="button" class="btn"  id="btnBookmark">
+            ${bookmarkActive ? filledBookmark : emptyBookmark}
+            </button>
+        </div>
+        <p class="card-text">
+            ${q.question}<br />
+            <i>${isMultiple ? `(best ${q.correct_answer.length} answers)` : `(best answer)` }</i>
+        </p>
+        <ul>`;
 
-            q.options.forEach(opt =>
+        q.options.map(opt =>
+        {
+            const isUserAnswer = user.includes(opt.id);
+            const isCorrect = q.correct_answer.includes(opt.id);
+
+            let className = "";
+
+            if (isUserAnswer && isCorrect)
             {
-                const isUserAnswer = user.includes(opt.id);
-                const isCorrect = q.correct_answer.includes(opt.id);
+                // Correct answer given
+                className = "correct";
+            }
+            else if (isUserAnswer && !isCorrect)
+            {
+                // Wrong answer given
+                className = "wrong";
+            }
+            else if (!isUserAnswer && isCorrect)
+            {
+                // Correct answer not given
+                className = "missed";
+            }
 
-                let className = "";
+            reviewHtmlNew += `
+                <li class="${className}">
+                    <b>${opt.id}.</b> ${opt.text}
+                </li>`
+            }
+        ).join("");
 
-                if (isUserAnswer && isCorrect)
-                {
-                    className = "correct";        // risposta data corretta
-                }
-                else if (isUserAnswer && !isCorrect)
-                {
-                    className = "wrong";          // risposta data sbagliata
-                }
-                else if (!isUserAnswer && isCorrect)
-                {
-                    className = "missed";         // risposta corretta non data
-                }
+        reviewHtmlNew += `
+        </ul>
+    </div>
+</div>`;
 
-                reviewHtml += `
-                    <li class="${className}">
-                        <b>${opt.id}.</b> ${opt.text}
-                    </li>
-                `;
-            });
-
-            reviewHtml += `
-                    </ul>
-                    <br>
-                </div>
-            `;
+        currentQuestion++;
         });
 
-        resultBox.innerHTML += reviewHtml;
+        resultBox.innerHTML += reviewHtmlNew;
     }
 }
 
