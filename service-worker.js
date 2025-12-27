@@ -1,4 +1,4 @@
-const CACHE_NAME = "pwa-miquizzero-v3-2-0";
+const CACHE_NAME = "pwa-miquizzero-v4";
 
 const ASSETS = [
   "/",
