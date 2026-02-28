@@ -126,21 +126,23 @@ function startQuiz()
     backBtn.style.display = "inline-block";
     progressContainer.style.display = "";
 
+    let questionsNumber = parseInt(questionToUse.value);
+
     // Check if request to randomize the order of questions
     if(quizRandom.checked)
     {
-        questions = shuffle([...quizData.questions]);
+        questions = shuffle([...quizData.questions]).slice(0, questionsNumber);
     }
     else
     {
-        questions = quizData.questions;
+        questions = quizData.questions.slice(0, questionsNumber);
     }
 
     startTotalTimer();
     loadQuestion();
 }
-  
-  // ------------ TIMER --------------
+
+// ------------ TIMER --------------
 function startTotalTimer()
 {
     timerBox.textContent = formatTime(totalTime);

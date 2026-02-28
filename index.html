@@ -4,8 +4,8 @@
         <meta charset="UTF-8">
         <title>MiQuizZero</title>
         <link rel="stylesheet" href="bootstrap.min.css">
-        <link rel="stylesheet" href="style.css?v=3.2.0">
-        <link rel="manifest" href="manifest.json?v=3.2.0">
+        <link rel="stylesheet" href="style.css?v=3.3.0">
+        <link rel="manifest" href="manifest.json?v=3.3.0">
         <meta name="theme-color" content="#0d6efd">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -41,13 +41,13 @@
                                 Questions to use for the quiz
                             </label>
                             <div class="input-group mb-3">
-                                <input type="number" disabled id="questionToUse" value="0" min="1" class="form-control text-end" aria-label="" aria-describedby="totalQuestions">
+                                <input type="number" id="questionToUse" value="0" min="1" class="form-control text-end" aria-label="" aria-describedby="totalQuestions">
                                 <span class="input-group-text" id="totalQuestions">of 0</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <label for="quizTimeInput" class="form-label">Total time available (minutes)</label>
-                            <input type="number" id="quizTimeInput" class="form-control text-end" value="5" min="1" aria-label="Number of minutes available for quiz">
+                            <input type="number" id="quizTimeInput" class="form-control text-end" value="30" min="1" aria-label="Number of minutes available for quiz">
                         </div>
                         <div class="col-12">
                             <div><label class="form-label">Randomize</label></div>
@@ -95,10 +95,10 @@
             <div id="result" class="d-none" role="result" aria-live="result"></div>
             <!-- FOOTER -->
             <div class="text-center mt-4 small">
-                <a href="https://github.com/bobboteck/miquizzero" class="text-decoration-none">MiQuizZero</a> - Version 3.2.0 - by <a href="https://bobboteck.github.io/" class="text-decoration-none">Bobboteck</a>
+                <a href="https://github.com/bobboteck/miquizzero" class="text-decoration-none">MiQuizZero</a> - Version 3.3.0 - by <a href="https://bobboteck.github.io/" class="text-decoration-none">Bobboteck</a>
             </div>
         </div>
-        <script src="app.js?v=3.2.0"></script>
+        <script src="app.js?v=3.3.0"></script>
         <!-- Service Worker -->
         <script>
         if ("serviceWorker" in navigator) 

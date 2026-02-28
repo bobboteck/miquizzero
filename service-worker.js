@@ -1,4 +1,4 @@
-const CACHE_NAME = "pwa-miquizzero-v5";
+const CACHE_NAME = "pwa-miquizzero-v6";
 
 const ASSETS = [
   "/",
@@ -42,7 +42,7 @@ self.addEventListener("activate", event =>
 /* FETCH */
 self.addEventListener("fetch", event =>
 {
-    /* NAVIGAZIONE (index.html) → NETWORK FIRST */
+    /* NAVIGAZIONE (index.html) > NETWORK FIRST */
     if (event.request.mode === "navigate")
     {
         event.respondWith(fetch(event.request)
@@ -61,7 +61,7 @@ self.addEventListener("fetch", event =>
         return;
     }
 
-    /* FILE STATICI → CACHE FIRST */
+    /* FILE STATICI > CACHE FIRST */
     event.respondWith(caches.match(event.request).then(cached =>
     {
         if (cached)
